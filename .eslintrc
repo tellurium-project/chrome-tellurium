@@ -1,0 +1,21 @@
+{
+  "parser": "typescript-eslint-parser",
+
+  "extends": [
+    "standard"
+  ],
+
+  "plugins": [
+    "typescript",
+  ],
+
+  "parserOptions": {
+    "sourceType": "module"
+  },
+
+  "env": {
+    "browser": true,
+    "es6": true,
+    "webextensions": true
+  }
+}

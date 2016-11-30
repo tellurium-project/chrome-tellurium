@@ -1,0 +1,37 @@
+{
+  "name": "chrome-tellurium",
+  "version": "1.0.0",
+  "description": "",
+  "main": "popup.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config build/webpack.config.js",
+    "watch": "webpack --config build/webpack.config.js --watch",
+    "lint": "$(npm bin)/eslint src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tellurium-project/chrome-tellurium.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tellurium-project/chrome-tellurium/issues"
+  },
+  "homepage": "https://github.com/tellurium-project/chrome-tellurium#readme",
+
+  "devDependencies": {
+    "typescript-eslint-parser": "^1.0.0",
+    "webpack": "^1.13.3",
+    "eslint": "^3.11.1",
+    "eslint-config-standard": "^6.2.1",
+    "eslint-plugin-flowtype": "^2.28.2",
+    "eslint-plugin-promise": "^3.4.0",
+    "eslint-plugin-standard": "^2.0.1",
+    "eslint-plugin-typescript": "^0.1.0",
+    "flow-bin": "^0.36.0",
+    "flow-typed": "^2.0.0",
+    "ts-loader": "^1.2.2",
+    "typescript": "^2.0.10"
+  }
+}

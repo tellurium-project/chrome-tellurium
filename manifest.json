@@ -1,0 +1,23 @@
+{
+  "manifest_version": 2,
+
+  "name": "Tellunium for Google Chrome",
+  "description": "This extension shows a Google Image search result for the current page",
+  "version": "1.0",
+  "permissions": [
+    "activeTab"
+  ],
+  "background": {
+    "scripts": ["dist/eventPage.js"],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*/*"],
+      "js": ["dist/contentScript.js"]
+    }
+  ],
+  "browser_action": {
+    "default_icon": "icon.png"
+  }
+}
