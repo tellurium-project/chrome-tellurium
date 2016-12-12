@@ -8,11 +8,11 @@ describe('util', function () {
 
   describe('.getNth', function () {
     beforeEach(function () {
-      this.html = fixture.load('getNth.html')[0]
+      fixture.load('getNth.html', true)
     })
 
     it('returns index of given element from the parent', function () {
-      console.log(this.html.getElementById('second'))
+      console.log(document.getElementById('second'))
     })
   })
 })
