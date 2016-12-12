@@ -4,7 +4,7 @@
   "description": "",
   "main": "popup.js",
   "scripts": {
-    "test": "mocha",
+    "test": "karma start",
     "build": "webpack --config build/webpack.config.js",
     "watch": "webpack --config build/webpack.config.js --watch",
     "lint": "$(npm bin)/eslint src"
