@@ -4,16 +4,16 @@
 module.exports = function (config) {
   config.set({
     basePath: '',
-    frameworks: ['mocha'],
+    frameworks: ['mocha', 'fixture'],
     files: [
-      'test/**/*.ts',
-      'test/*.ts'
+      'test/fixtures/**/*.html',
+      'test/index.js'
     ],
     exclude: [],
 
     preprocessors: {
-      'test/*_test.ts': ['webpack'],
-      'test/**/*_test.ts': ['webpack']
+      'test/fixtures/**/*.html': ['html2js'],
+      'test/index.js': [ 'webpack', 'sourcemap' ]
     },
 
     reporters: ['progress'],
@@ -42,7 +42,7 @@ module.exports = function (config) {
         ],
 
         postLoaders: [
-          { test: /_test\.ts$/, loader: 'webpack-espower-loader' }
+          { test: /\.spec\.ts$/, loader: 'webpack-espower-loader' }
         ]
       }
     }
