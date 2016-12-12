@@ -7,7 +7,8 @@
     "test": "karma start --single-run",
     "build": "webpack --config build/webpack.config.js",
     "watch": "webpack --config build/webpack.config.js --watch",
-    "lint": "$(npm bin)/eslint src"
+    "lint": "$(npm bin)/eslint src",
+    "install": "typings install"
   },
   "repository": {
     "type": "git",
