@@ -77,6 +77,12 @@ describe('util', function () {
 
         assert(util.getIDSelector(ele) === '#parent')
       })
+
+      it('returns empty string when given element has no ID attribute', function () {
+        const ele = document.querySelector('#parent > a')
+
+        assert(util.getIDSelector(ele) === '')
+      })
     })
 
     describe('.getClassSelector', function () {
