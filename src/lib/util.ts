@@ -38,7 +38,8 @@ export const _toCSSLocator = (origin: Element, element: Element, path: string[],
       candidates.push(newSelector)
       return
     } else {
-      _toCSSLocator(element, element.parentElement, newPath, candidates)
+      if (element.parentElement && element.parentElement.tagName === 'body') return
+      _toCSSLocator(origin, element.parentElement, newPath, candidates)
     }
   })
 }
