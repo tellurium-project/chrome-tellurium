@@ -70,5 +70,13 @@ describe('util', function () {
         assert(util.getElementSelector(p) === 'p')
       })
     })
+
+    describe('.getIDSelector', function () {
+      it('returns ID selector', function () {
+        const ele = document.getElementById('parent')
+
+        assert(util.getIDSelector(ele) === '#parent')
+      })
+    })
   })
 })
