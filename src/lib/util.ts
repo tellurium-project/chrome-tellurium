@@ -25,8 +25,8 @@ export const toCSSSelector = (element: Element): string => {
       getIDSelector(current),
       getClassSelector(current),
       getElementSelector(current) + getClassSelector(current),
-      getAttrSelector(current, ['name']),
-      getElementSelector(current) + getAttrSelector(current, ['name']),
+      getAttrSelector(current, 'name'),
+      getElementSelector(current) + getAttrSelector(current, 'name'),
       getElementSelector(current) + getNthSelector(current)
     ]
 
@@ -60,7 +60,7 @@ export const getElementSelector = (element: Element): string => {
   return element.tagName.toLowerCase()
 }
 
-export const getAttrSelector = (element: Element, attributes: string[]): string => {
+export const getAttrSelector = (element: Element, ...attributes: string[]): string => {
   const inner =
     attributes
       .map((attr) => {

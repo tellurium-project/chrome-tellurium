@@ -1,5 +1,5 @@
 import * as assert from 'power-assert'
-import { getNth, getNthSelector } from '../src/lib/util'
+import { getNth, getNthSelector, getAttrSelector } from '../src/lib/util'
 
 describe('util', function () {
   before(function () {
@@ -41,6 +41,30 @@ describe('util', function () {
       const ele = document.getElementById('second')
 
       assert(getNthSelector(ele) === ':nth-of-type(1)')
+    })
+  })
+
+  describe('getAttrSelector', function () {
+    beforeEach(function () {
+      fixture.load('getAttrSelector.html', true)
+    })
+
+    it('returns attribute selector', function () {
+      const ele = document.getElementById('dashboard-link')
+
+      assert(getAttrSelector(ele, 'id', 'href') === '[id="dashboard-link" href="/dashboard"]')
+    })
+
+    it('filters non given attributes to the element', function () {
+      const ele = document.getElementById('dashboard-link')
+
+      assert(getAttrSelector(ele, 'id', 'css') === '[id="dashboard-link"]')
+    })
+
+    it("returns an empty string when all given attributes wasn't specify on the element", function () {
+      const ele = document.getElementById('dashboard-link')
+
+      assert(getAttrSelector(ele, 'class', 'css') === '')
     })
   })
 })
