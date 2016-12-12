@@ -12,7 +12,7 @@ describe('util', function () {
     })
 
     it('returns index of given element from the parent', function () {
-      console.log(this.html.getElementById('second'))
+      // console.log(this.html.getElementById('second'))
     })
   })
 })
