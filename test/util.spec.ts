@@ -78,5 +78,19 @@ describe('util', function () {
         assert(util.getIDSelector(ele) === '#parent')
       })
     })
+
+    describe('.getClassSelector', function () {
+      it('returns class selector', function () {
+        const ele = document.getElementById('container')
+
+        assert(util.getClassSelector(ele) === '.container')
+      })
+
+      it('returns empty string when given element has no class attribute', function () {
+        const ele = document.getElementById('parent')
+
+        assert(util.getClassSelector(ele) === '')
+      })
+    })
   })
 })
