@@ -4,10 +4,13 @@
   "description": "",
   "main": "popup.js",
   "scripts": {
-    "test": "karma start --single-run",
+    "test": "karma start",
+    "test:ci": "karma start --single-run",
+    "test:all": "npm run lint & npm test",
+    "test:all:ci": "npm run lint & npm run test:ci",
     "build": "webpack --config build/webpack.config.js",
     "watch": "webpack --config build/webpack.config.js --watch",
-    "lint": "$(npm bin)/eslint src",
+    "lint": "eslint src",
     "install": "typings install"
   },
   "repository": {
