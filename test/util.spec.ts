@@ -1,5 +1,5 @@
 import * as assert from 'power-assert'
-import { getNth, getNthSelector, getAttrSelector } from '../src/lib/util'
+import * as util from '../src/lib/util'
 
 describe('util', function () {
   before(function () {
@@ -20,15 +20,15 @@ describe('util', function () {
       const second = document.getElementById('second')
       const third = document.getElementById('third')
 
-      assert(getNth(first) === 0)
-      assert(getNth(second) === 1)
-      assert(getNth(third) === 2)
+      assert(util.getNth(first) === 0)
+      assert(util.getNth(second) === 1)
+      assert(util.getNth(third) === 2)
     })
 
     it('returns 0 when given element is root element', function () {
       const ele = document.getElementsByTagName('html')[0]
 
-      assert(getNth(ele) === 0)
+      assert(util.getNth(ele) === 0)
     })
   })
 
@@ -40,11 +40,11 @@ describe('util', function () {
     it('returns nth-of-type selector with index of given element', function () {
       const ele = document.getElementById('second')
 
-      assert(getNthSelector(ele) === ':nth-of-type(1)')
+      assert(util.getNthSelector(ele) === ':nth-of-type(1)')
     })
   })
 
-  describe('getAttrSelector', function () {
+  describe('.getAttrSelector', function () {
     beforeEach(function () {
       fixture.load('getAttrSelector.html', true)
     })
@@ -52,19 +52,33 @@ describe('util', function () {
     it('returns attribute selector', function () {
       const ele = document.getElementById('dashboard-link')
 
-      assert(getAttrSelector(ele, 'id', 'href') === '[id="dashboard-link" href="/dashboard"]')
+      assert(util.getAttrSelector(ele, 'id', 'href') === '[id="dashboard-link" href="/dashboard"]')
     })
 
     it('filters non given attributes to the element', function () {
       const ele = document.getElementById('dashboard-link')
 
-      assert(getAttrSelector(ele, 'id', 'css') === '[id="dashboard-link"]')
+      assert(util.getAttrSelector(ele, 'id', 'css') === '[id="dashboard-link"]')
     })
 
     it("returns an empty string when all given attributes wasn't specify on the element", function () {
       const ele = document.getElementById('dashboard-link')
 
-      assert(getAttrSelector(ele, 'class', 'css') === '')
+      assert(util.getAttrSelector(ele, 'class', 'css') === '')
+    })
+  })
+
+  describe('.getElementSelector', function () {
+    beforeEach(function () {
+      fixture.load('getElementSelector.html', true)
+    })
+
+    it('returns element selector', function () {
+      const anchorElement = document.getElementById('a')
+      const divElement = document.getElementById('div')
+
+      assert(util.getElementSelector(anchorElement) === 'a')
+      assert(util.getElementSelector(divElement) === 'div')
     })
   })
 })
