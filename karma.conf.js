@@ -44,6 +44,10 @@ module.exports = function (config) {
         postLoaders: [
           { test: /\.spec\.ts$/, loader: 'webpack-espower-loader' }
         ]
+      },
+
+      resolve: {
+        extensions: ['', '.ts', '.js']
       }
     }
   })
