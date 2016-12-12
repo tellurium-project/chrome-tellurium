@@ -9,39 +9,38 @@ export const isPrimitive = (value: any): boolean => {
   )
 }
 
-export const toCSSSelector = (element: Element): string => {
-  // セレクタを生成
-  // 生成したセレクタが一意に特定できるかを調べる
-  // 特定できるならそのセレクタを使用する
-  // 出来ないなら、親要素もセレクタに含める
-  const path = []
-  var current = element
-  var currentSelector : string
+export const toCSSLocator = (element: Element): string => {
+  const candidates = []
+  _toCSSLocator(element, element, [], candidates)
+  candidates.sort((a, b) => a.length - b.length)
 
-  while (true) {
-    // id はどの要素も優先
-    // name 属性
-    const selectors = [
-      getIDSelector(current),
-      getClassSelector(current),
-      getElementSelector(current) + getClassSelector(current),
-      getAttrSelector(current, 'name'),
-      getElementSelector(current) + getAttrSelector(current, 'name'),
-      getElementSelector(current) + getNthSelector(current)
-    ]
+  return candidates[0]
+}
 
-    const foundSelector = selectors.find((selector) => selector !== '')
+export const _toCSSLocator = (origin: Element, element: Element, path: string[], candidates: string[]) => {
+  if (!element) return
 
-    path.unshift(foundSelector)
-    currentSelector = path.join(' > ')
+  const selectors = [
+    getIDSelector(element),
+    getClassSelector(element),
+    getElementSelector(element) + getClassSelector(element),
+    getAttrSelector(element, 'name'),
+    getElementSelector(element) + getAttrSelector(element, 'name'),
+    getElementSelector(element) + getNthChildSelector(element)
+  ].filter((selector) => selector !== '')
 
-    if (document.querySelectorAll(currentSelector).length === 1) break
+  selectors.forEach((s) => {
+    const newPath = [s].concat(path)
+    const newSelector = newPath.join(' > ')
+    const foundElements = document.querySelectorAll(newSelector)
 
-    current = current.parentElement
-    if (!current) break
-  }
-
-  return currentSelector
+    if (foundElements.length === 1 && foundElements.item(0) === origin) {
+      candidates.push(newSelector)
+      return
+    } else {
+      _toCSSLocator(element, element.parentElement, newPath, candidates)
+    }
+  })
 }
 
 export const getIDSelector = (element: Element): string => {
@@ -75,16 +74,16 @@ export const getAttrSelector = (element: Element, ...attributes: string[]): stri
   return inner ? '[' + inner + ']' : ''
 }
 
-export const getNth = (element: Element): number => {
+export const getNthChild = (element: Element): number => {
   return (
     element.parentElement ?
-    Array.prototype.indexOf.call(element.parentElement.children, element) :
-    0
+    Array.prototype.indexOf.call(element.parentElement.children, element) + 1 :
+    1
   )
 }
 
-export const getNthSelector = (element: Element): string => {
-  const nth = getNth(element)
+export const getNthChildSelector = (element: Element): string => {
+  const nth = getNthChild(element)
 
-  return nth === -1 ? '' : `:nth-of-type(${nth})`
+  return `:nth-child(${nth})`
 }

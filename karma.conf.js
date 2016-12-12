@@ -17,7 +17,7 @@ module.exports = function (config) {
     },
 
     reporters: ['progress'],
-    browsers: ['Chrome', 'Firefox'],
+    browsers: ['Chrome'],
 
     port: 9876,
     colors: true,

@@ -15,29 +15,29 @@ describe('util', function () {
       fixture.load('selectors.html', true)
     })
 
-    describe('.getNth', function () {
+    describe('.getNthChild', function () {
       it('returns index of given element from the parent', function () {
         const first = document.getElementById('first')
         const second = document.getElementById('second')
         const third = document.getElementById('third')
 
-        assert(util.getNth(first) === 0)
-        assert(util.getNth(second) === 1)
-        assert(util.getNth(third) === 2)
+        assert(util.getNthChild(first) === 1)
+        assert(util.getNthChild(second) === 2)
+        assert(util.getNthChild(third) === 3)
       })
 
       it('returns 0 when given element is root element', function () {
         const ele = document.getElementsByTagName('html')[0]
 
-        assert(util.getNth(ele) === 0)
+        assert(util.getNthChild(ele) === 1)
       })
     })
 
-    describe('.getNthSelector', function () {
+    describe('.getNthChildSelector', function () {
       it('returns nth-of-type selector with index of given element', function () {
         const ele = document.getElementById('second')
 
-        assert(util.getNthSelector(ele) === ':nth-of-type(1)')
+        assert(util.getNthChildSelector(ele) === ':nth-child(2)')
       })
     })
 
@@ -96,6 +96,16 @@ describe('util', function () {
         const ele = document.getElementById('parent')
 
         assert(util.getClassSelector(ele) === '')
+      })
+    })
+
+    describe('.toCSSLocator', function () {
+      it('returns location written CSS selector for the element', function () {
+        const ele1 = document.getElementById('parent')
+        const ele2 = document.querySelector('#parent > a:nth-child(4)')
+
+        assert(util.toCSSLocator(ele1) === '#parent')
+        assert(util.toCSSLocator(ele2) === '#parent > a:nth-child(4)')
       })
     })
   })
