@@ -1,26 +1,3 @@
-function _toPlainObject (object: Object, depth: number, maxDepth: number): Object {
-  if (depth > maxDepth) return null
-
-  const plain = {}
-
-  for (const prop in object) {
-    const value = object[prop]
-    const type = typeof value
-
-    if (isPrimitive(value)) {
-      plain[prop] = value
-    } else if (typeof value !== 'function') {
-      const plainValue = _toPlainObject(value, depth + 1, maxDepth)
-
-      if (plainValue) {
-        plain[prop] = plainValue
-      }
-    }
-  }
-
-  return plain
-}
-
 export const isPrimitive = (value: any): boolean => {
   const type = typeof value
   return (
@@ -30,10 +7,6 @@ export const isPrimitive = (value: any): boolean => {
     value === null ||
     value === undefined
   )
-}
-
-export const toPlainObject = (object: Object, maxDepth = 3): Object => {
-  return _toPlainObject(object, 0, maxDepth)
 }
 
 export const toCSSSelector = (element: Element): string => {
