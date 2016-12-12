@@ -11,8 +11,18 @@ describe('util', function () {
       fixture.load('getNth.html', true)
     })
 
+    afterEach(function () {
+      fixture.cleanup()
+    })
+
     it('returns index of given element from the parent', function () {
-      console.log(document.getElementById('second'))
+      const first = document.getElementById('first')
+      const second = document.getElementById('second')
+      const third = document.getElementById('third')
+
+      assert(getNth(first) === 0)
+      assert(getNth(second) === 1)
+      assert(getNth(third) === 2)
     })
   })
 })
