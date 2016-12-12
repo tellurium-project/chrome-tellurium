@@ -79,7 +79,7 @@ export const getNth = (element: Element): number => {
   return (
     element.parentElement ?
     Array.prototype.indexOf.call(element.parentElement.children, element) :
-    -1
+    0
   )
 }
 

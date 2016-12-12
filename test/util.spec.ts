@@ -24,5 +24,11 @@ describe('util', function () {
       assert(getNth(second) === 1)
       assert(getNth(third) === 2)
     })
+
+    it('returns 0 when the element has no parent', function () {
+      const ele = document.getElementsByTagName('html')[0]
+
+      assert(getNth(ele) === 0)
+    })
   })
 })
