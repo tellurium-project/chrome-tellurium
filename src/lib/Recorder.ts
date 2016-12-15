@@ -1,5 +1,5 @@
 import ListenerGroup from './ListenerGroup'
-import { toCSSSelector } from './util'
+import { toCSSLocator } from './util'
 // chrome.runtime.sendMessage({type: 'userEvent', event: e}, (res) => {
 //   console.log(res.result)
 // })
@@ -44,7 +44,7 @@ export default class Recorder {
   onClick (e: MouseEvent) {
     const event = {
       type: e.type,
-      selector: toCSSSelector(e.srcElement)
+      selector: toCSSLocator(e.srcElement)
     }
 
     console.log(event)

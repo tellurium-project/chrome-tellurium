@@ -17,7 +17,7 @@ module.exports = function (config) {
     },
 
     reporters: ['progress'],
-    browsers: ['Chrome', 'Firefox'],
+    browsers: ['Chrome'],
 
     port: 9876,
     colors: true,
@@ -44,6 +44,10 @@ module.exports = function (config) {
         postLoaders: [
           { test: /\.spec\.ts$/, loader: 'webpack-espower-loader' }
         ]
+      },
+
+      resolve: {
+        extensions: ['', '.ts', '.js']
       }
     }
   })
