@@ -1,3 +1,5 @@
+import * as Immutable from 'immutable'
+
 export const isPrimitive = (value: any): boolean => {
   const type = typeof value
   return (
@@ -10,38 +12,13 @@ export const isPrimitive = (value: any): boolean => {
 }
 
 export const toCSSLocator = (element: Element): string => {
-  const candidates = []
-  _toCSSLocator(element, element, [], candidates)
-  candidates.sort((a, b) => a.length - b.length)
+  const locator = getIDSelector(element)
 
-  return candidates[0]
-}
-
-export const _toCSSLocator = (origin: Element, element: Element, path: string[], candidates: string[]) => {
-  if (!element) return
-
-  const selectors = [
-    getIDSelector(element),
-    getClassSelector(element),
-    getElementSelector(element) + getClassSelector(element),
-    getAttrSelector(element, 'name'),
-    getElementSelector(element) + getAttrSelector(element, 'name'),
-    getElementSelector(element) + getNthChildSelector(element)
-  ].filter((selector) => selector !== '')
-
-  selectors.forEach((s) => {
-    const newPath = [s].concat(path)
-    const newSelector = newPath.join(' > ')
-    const foundElements = document.querySelectorAll(newSelector)
-
-    if (foundElements.length === 1 && foundElements.item(0) === origin) {
-      candidates.push(newSelector)
-      return
-    } else {
-      if (element.parentElement && element.parentElement.tagName === 'body') return
-      _toCSSLocator(origin, element.parentElement, newPath, candidates)
-    }
-  })
+  if (locator) {
+    return locator;
+  } else {
+    throw new Error('Support only ID selector')
+  }
 }
 
 export const getIDSelector = (element: Element): string => {
