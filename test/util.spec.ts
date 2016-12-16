@@ -101,13 +101,19 @@ describe('util', function () {
 
     describe('.toCSSLocator', function () {
       it('returns location written CSS selector for the element', function () {
-        const ele1 = document.getElementById('parent')
+        const ele1 = document.querySelector('#parent')
         const ele2 = document.querySelector('#parent > a:nth-child(4)')
-        const ele3 = document.querySelector('.brand')
 
         assert(util.toCSSLocator(ele1) === '#parent')
-        assert(util.toCSSLocator(ele2) === '#parent > a:nth-child(4)')
-        assert(util.toCSSLocator(ele3) === '.brand')
+        assert.throws(
+          () => {
+            util.toCSSLocator(ele2)
+          },
+          (err) => {
+            assert(err.message === 'Support only ID selector')
+            return true
+          }
+        )
       })
     })
   })

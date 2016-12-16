@@ -17,7 +17,7 @@ export const toCSSLocator = (element: Element): string => {
   if (locator) {
     return locator;
   } else {
-    throw new Error('ID 以外セレクタ以外のロケータには未対応です')
+    throw new Error('Support only ID selector')
   }
 }
 
