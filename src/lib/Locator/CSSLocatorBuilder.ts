@@ -41,7 +41,7 @@ export default class CSSLocatorBuilder implements LocatorBuilder {
   }
 
   private buildNormalAttr (element: Element, attr: string): string {
-    return `${attr}="${element.getAttribute(attr)}"`
+    return `${element.tagName.toLowerCase()}[${attr}="${element.getAttribute(attr)}"]`
   }
 
   private buildIDAttr (element: Element): string {
@@ -53,6 +53,8 @@ export default class CSSLocatorBuilder implements LocatorBuilder {
   }
 
   private buildNthOfType (element: Element): string {
+    if (!element.parentElement) return null
+
     const children = element.parentElement.children
     var total = 0
     var index = -1
