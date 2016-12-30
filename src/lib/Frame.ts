@@ -19,11 +19,11 @@ export default class Frame {
   }
 
   get document () {
-    return this.window.document;
+    return this.window.document
   }
 
   locateElement (locatorType: string, locator: string): Element {
-    return this.locatorMethods[locatorType](locator)
+    return this.locatorMethods[locatorType].call(this, locator)
   }
 
   locateElementByID (id): Element {
@@ -38,7 +38,7 @@ export default class Frame {
     const anchors = Array.from(this.document.getElementsByTagName('a'))
 
     return anchors.find((a) => {
-      return util.normalizeWhitespace(a.textContent.toLowerCase()) === linkText
+      return util.normalizeWhitespace(a.textContent.toLowerCase()) === linkText.toLowerCase()
     })
   }
 

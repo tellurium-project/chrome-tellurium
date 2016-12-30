@@ -70,10 +70,10 @@ export default class CSSLocatorBuilder implements LocatorBuilder {
       if (child.tagName === element.tagName) total++
     }
 
-    return index >= 0 ? `${this.buildType(element)}:nth-of-type(${index})` : null
+    return index >= 0 ? `${this.buildType(element)}:nth-of-type(${index + 1})` : null
   }
 
   private buildType (element: Element): string {
-    return element.tagName
+    return element.tagName.toLowerCase()
   }
 }
