@@ -1,9 +1,9 @@
-import LocatorBuilder from './LocatorBuilder'
-import IDLocatorBuilder from './IDLocatorBuilder'
-import NameLocatorBuilder from './NameLocatorBuilder'
-import LinkTextLocatorBuilder from './LinkTextLocatorBuilder'
-import CSSLocatorBuilder from './CSSLocatorBuilder'
-import Frame from '../Frame'
+import LocatorBuilder from './locator_builders/LocatorBuilder'
+import IDLocatorBuilder from './locator_builders/IDLocatorBuilder'
+import NameLocatorBuilder from './locator_builders/NameLocatorBuilder'
+import LinkTextLocatorBuilder from './locator_builders/LinkTextLocatorBuilder'
+import CSSLocatorBuilder from './locator_builders/CSSLocatorBuilder'
+import Frame from './Frame'
 
 type LocatorMatcher =
   (element: Element, frame: Frame, locator: string, locatorType: string, bestMethod?: boolean) => boolean

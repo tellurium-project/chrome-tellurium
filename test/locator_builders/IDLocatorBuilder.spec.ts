@@ -1,6 +1,6 @@
 import * as assert from 'power-assert'
 import Frame from '../../src/lib/Frame'
-import IDLocatorBuilder from '../../src/lib/Locator/IDLocatorBuilder'
+import IDLocatorBuilder from '../../src/lib/locator_builders/IDLocatorBuilder'
 
 describe('IDLocatorBuilder', function () {
   before(function () {

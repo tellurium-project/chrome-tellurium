@@ -1,6 +1,6 @@
 import * as assert from 'power-assert'
 import Frame from '../../src/lib/Frame'
-import CSSLocatorBuilder from '../../src/lib/Locator/CSSLocatorBuilder'
+import CSSLocatorBuilder from '../../src/lib/locator_builders/CSSLocatorBuilder'
 
 describe('CSSLocatorBuilder', function () {
   before(function () {

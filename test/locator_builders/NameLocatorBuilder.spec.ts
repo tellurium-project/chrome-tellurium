@@ -1,6 +1,6 @@
 import * as assert from 'power-assert'
 import Frame from '../../src/lib/Frame'
-import NameLocatorBuilder from '../../src/lib/Locator/NameLocatorBuilder'
+import NameLocatorBuilder from '../../src/lib/locator_builders/NameLocatorBuilder'
 
 describe('NameLocatorBuilder', function () {
   before(function () {

@@ -1,6 +1,6 @@
 import * as assert from 'power-assert'
 import Frame from '../../src/lib/Frame'
-import LinkTextLocatorBuilder from '../../src/lib/Locator/LinkTextLocatorBuilder'
+import LinkTextLocatorBuilder from '../../src/lib/locator_builders/LinkTextLocatorBuilder'
 
 describe('LinkTextLocatorBuilder', function () {
   before(function () {
