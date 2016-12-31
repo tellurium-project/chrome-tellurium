@@ -1,5 +1,4 @@
 chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
-  if (req.type === 'userEvent') {
-    sendResponse({result: 'ok'})
-  }
+  console.log(req)
+  sendResponse({result: 'ok'})
 })

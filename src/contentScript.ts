@@ -1,8 +1,11 @@
 import Frame from './lib/Frame'
-import Recorder from './lib/Recorder'
+import Detector from './lib/Detector'
 
 const frame = new Frame(window)
-const recorder = new Recorder(frame)
-recorder.setUp()
+const detector = new Detector(frame)
+detector.bind()
 
-console.log('hoge')
+detector.on('documentEvent', (e) => {
+  console.log(e)
+  chrome.runtime.sendMessage({type: 'documentEvent', payload: e})
+})
