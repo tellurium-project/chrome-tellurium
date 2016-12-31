@@ -1,13 +1,14 @@
 import ListenerGroup from './ListenerGroup'
-import { toCSSLocator } from './util'
-// chrome.runtime.sendMessage({type: 'userEvent', event: e}, (res) => {
-//   console.log(res.result)
-// })
+import Locator from './Locator'
+import Frame from './Frame'
+
 export default class Recorder {
+  _frame: Frame
   _recording: boolean
   _documentListeners: ListenerGroup
 
-  constructor () {
+  constructor (frame: Frame) {
+    this._frame = frame
     this._documentListeners = new ListenerGroup(document)
   }
 
@@ -33,18 +34,21 @@ export default class Recorder {
     this._recording = false
   }
 
-  get recording (): boolean {
+  get recording () {
     return this._recording
   }
 
-  set recording (value: boolean) {
-    this._recording = value
+  get frame () {
+    return this._frame
   }
 
   onClick (e: MouseEvent) {
+    const l = Locator.fromElement(e.srcElement, this.frame)
+
     const event = {
       type: e.type,
-      selector: toCSSLocator(e.srcElement)
+      locator: l.value,
+      locatorType: l.type
     }
 
     console.log(event)
