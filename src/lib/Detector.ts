@@ -2,7 +2,6 @@ import * as event from 'eventemitter2'
 import ListenerGroup from './ListenerGroup'
 import Locator from './Locator'
 import Frame from './Frame'
-import CaptureEvent from './CaptureEvent'
 
 export default class Detector extends event.EventEmitter2 {
   _frame: Frame

@@ -1,4 +1,10 @@
+const webpack = require('webpack')
+
 module.exports = {
+  node: {
+    __dirname: true
+  },
+
   entry: {
     contentScript: './src/contentScript.ts',
     eventPage: './src/eventPage.ts'
@@ -23,5 +29,8 @@ module.exports = {
     extensions: ['', '.ts', '.js']
   },
 
-  devtool: 'source-map'
+  devtool: 'source-map',
+  plugins: [
+    new webpack.DefinePlugin({ "global.GENTLY": false })
+  ]
 }
