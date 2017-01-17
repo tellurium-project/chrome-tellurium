@@ -7,7 +7,8 @@ module.exports = {
 
   entry: {
     contentScript: './src/contentScript.ts',
-    eventPage: './src/eventPage.ts'
+    background: './src/background.ts',
+    popup: './src/popup.ts'
   },
 
   output: {
@@ -18,6 +19,11 @@ module.exports = {
   module: {
     loaders: [
       {
+        test: /\.vue$/,
+        exclude: /node_modules/,
+        loader: 'vue'
+      },
+      {
         test: /\.ts$/,
         exclude: /node_modules/,
         loader: 'ts'
@@ -26,7 +32,10 @@ module.exports = {
   },
 
   resolve: {
-    extensions: ['', '.ts', '.js']
+    extensions: ['', '.ts', '.js'],
+    alias: {
+      vue: 'vue/dist/vue.js'
+    }
   },
 
   devtool: 'source-map',

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>ChromeTellurium</title>
+    <style>
+      html, body {
+        height: 100%;
+      }
+
+      body {
+        width: 300px;
+        height: 400px;
+      }
+
+      .script {
+        width: 100%;
+        padding: 0;
+        border-collapse: collapse;
+      }
+
+      .script th {
+        text-align: left;
+      }
+
+      .script td,
+      .script th {
+        padding: 4px;
+        border-bottom: 1px solid #ddd;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- <div id="app"></div> -->
+    <div id="vue-container">
+      <app></app>
+    </div>
+    <script src="../dist/popup.js"></script>
+  </body>
+</html>
