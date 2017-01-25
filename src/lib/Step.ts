@@ -1,11 +1,19 @@
+import Locator from './Locator'
+
 export default class Step {
   type: string
-  args: {}
+  data: any
   timestamp: number
+  locator: Locator
 
-  constructor (type: string, args: {}) {
+  constructor (type: string, locator?: Locator, data?: any) {
     this.type = type
-    this.args = args
+    this.data = data || {}
     this.timestamp = Date.now()
+    this.locator = locator
+  }
+
+  within (milliSec: number): boolean {
+    return Date.now() - this.timestamp < milliSec
   }
 }

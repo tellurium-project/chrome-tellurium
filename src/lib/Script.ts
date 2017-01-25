@@ -24,9 +24,11 @@ export default class Script extends event.EventEmitter2 {
   }
 
   removeStep (index: number) {
-    const step = this.steps.splice(index, 1)
-    this.emit('stepRemoved', { step: step, index: index})
+    const removedSteps = this.steps.splice(index, 1)
+    this.emit('stepRemoved', { step: removedSteps[0], index: index})
     this.emit('changed', { steps: this.toArray() })
+
+    return removedSteps[0]
   }
 
   replaceLastStep (newStep: Step) {

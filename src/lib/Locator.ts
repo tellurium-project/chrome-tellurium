@@ -11,6 +11,7 @@ type LocatorMatcher =
 export default class Locator {
   private _originalElement: Element
   private _frame: Frame
+  nodeName: string
   type: string
   candidates: {}
   value: string
@@ -20,6 +21,7 @@ export default class Locator {
     this.type = type
     this.candidates = candidates
     this.value = this.candidates[this.type][0] || ''
+    this.nodeName = originalElement.nodeName.toLowerCase()
   }
 
   get originalElement () {
