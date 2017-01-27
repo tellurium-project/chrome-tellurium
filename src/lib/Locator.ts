@@ -11,25 +11,17 @@ type LocatorMatcher =
 export default class Locator {
   private _originalElement: Element
   private _frame: Frame
-  private _type: string
-  private _candidates: {}
+  nodeName: string
+  type: string
+  candidates: {}
+  value: string
 
   constructor (originalElement: Element, type: string, candidates: {}) {
     this._originalElement = originalElement
-    this._type = type
-    this._candidates = candidates
-  }
-
-  get type () {
-    return this._type
-  }
-
-  get value () {
-    return this.candidates[this.type][0] || ''
-  }
-
-  get candidates () {
-    return this._candidates
+    this.type = type
+    this.candidates = candidates
+    this.value = this.candidates[this.type][0] || ''
+    this.nodeName = originalElement.nodeName.toLowerCase()
   }
 
   get originalElement () {
