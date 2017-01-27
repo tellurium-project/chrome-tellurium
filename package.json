@@ -2,7 +2,6 @@
   "name": "chrome-tellurium",
   "version": "1.0.0",
   "description": "",
-  "main": "popup.js",
   "scripts": {
     "test": "karma start",
     "test:ci": "karma start --single-run",

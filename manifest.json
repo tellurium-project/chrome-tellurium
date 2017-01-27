@@ -17,8 +17,5 @@
       "js": ["dist/contentScript.js"]
     }
   ],
-  "browser_action": {
-    "default_icon": "images/default_icon.png",
-    "default_popup": "pages/popup.html"
-  }
+  "browser_action": {}
 }

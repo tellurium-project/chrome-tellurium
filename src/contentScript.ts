@@ -1,10 +1,8 @@
 import Frame from './lib/Frame'
-import Script from './lib/Script'
 import Detector from './lib/Detector'
 import * as Rx from 'rxjs/Rx'
 
 const frame = new Frame(window)
-const script = new Script()
 const detector = new Detector(frame)
 
 chrome.runtime.onMessage.addListener((res, sender, sendResponse) => {

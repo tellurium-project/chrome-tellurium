@@ -1,10 +1,8 @@
 import * as socketIO from 'socket.io-client'
 import * as event from 'eventemitter2'
 import Frame from './lib/Frame'
-import Script from './lib/Script'
 import * as Rx from 'rxjs/Rx'
 
-var script = new Script
 var sessionId = null
 var recording = false
 const io = socketIO('http://localhost:9000')

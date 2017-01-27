@@ -1,10 +1,7 @@
 import * as event from 'eventemitter2'
 import * as Rx from 'rxjs/Rx'
-import ListenerGroup from './ListenerGroup'
 import Locator from './Locator'
 import Frame from './Frame'
-import Step from './Step'
-import Script from './Script'
 
 export default class Detector extends event.EventEmitter2 {
   static inputFieldTypes = [
