@@ -2,6 +2,7 @@ import * as event from 'eventemitter2'
 import * as Rx from 'rxjs/Rx'
 import Locator from './Locator'
 import Frame from './Frame'
+import VirtualEvent from './VirtualEvent'
 
 export default class Detector extends event.EventEmitter2 {
   static inputFieldTypes = [
@@ -34,8 +35,23 @@ export default class Detector extends event.EventEmitter2 {
   }
 
   bind () {
-    this.buildClickSubscription()
-    this.buildChangeSubscription()
+    this.bindTree(this.document.documentElement)
+
+    const target = document.querySelector('body')
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        for (var i = 0; i < mutation.addedNodes.length; i++) {
+          const node = mutation.addedNodes.item(i)
+
+          if (node.nodeType === node.ELEMENT_NODE) {
+            // console.log(node)
+            this.bindTree(<Element>node)
+          }
+        }
+      })
+    })
+
+    observer.observe(target, { subtree: true, childList: true })
   }
 
   enable () {
@@ -46,41 +62,52 @@ export default class Detector extends event.EventEmitter2 {
     this._enabled = false
   }
 
-  protected buildClickSubscription () {
-    const clickableSelector = [
-      'a[href]',
-      'input[type="submit"]',
-      'input[type="reset"]',
-      'input[type="button"]',
-      'input[type="image"]'
-    ].join(', ')
-    const clickableElements = this.document.querySelectorAll(clickableSelector)
-    const clicks = Rx.Observable.fromEvent(clickableElements, 'click')
+  protected isClickable (target: Element) {
+    if (target instanceof HTMLInputElement) {
+      return ['submit', 'reset', 'button', 'image'].indexOf(target.type) !== -1
+    } else if (target instanceof HTMLAnchorElement && target.classList.contains('href')) {
+      return true
+    } else {
+      return false
+    }
+  }
 
-    return clicks.subscribe(
+  protected isChangable (target: Element) {
+    return ['INPUT', 'TEXTAREA'].indexOf(target.tagName) !== -1
+  }
+
+  protected bindTree(root: Element) {
+    for (var i = 0; i < root.children.length; i++) {
+      const ele = root.children.item(i)
+      this.bindEvents(ele)
+      this.bindTree(ele)
+    }
+  }
+
+  protected bindEvents(target: Element) {
+    if (this.isClickable(target)) this.bindClickEvent(target)
+    if (this.isChangable(target)) this.bindChangeEvent(target)
+  }
+
+  protected bindClickEvent (target: Element) {
+    target.addEventListener('click',
       this.handleEvent.bind(this, (e: MouseEvent) => {
-        return { x: e.x, y: e.y, altKey: e.altKey }
+        return VirtualEvent.fromDOMEvent(e, this.frame, { eventProps: ['x', 'y'] })
       })
     )
   }
 
-  protected buildChangeSubscription() {
-    const textFields = this.document.querySelectorAll('input, textarea')
-    const fieldChanges = Rx.Observable.fromEvent(textFields, 'change')
-
-    return fieldChanges.subscribe(
-        this.handleEvent.bind(this, (e: Event) => {
-          return { value: e.srcElement['value'] }
-        })
+  protected bindChangeEvent (target: Element) {
+    target.addEventListener('change',
+      this.handleEvent.bind(this, (e: Event) => {
+        return VirtualEvent.fromDOMEvent(e, this.frame, { elementProps: ['value'] })
+      })
     )
   }
 
   protected handleEvent (dataBuilder: (e: Event) => {}, e: Event) {
     if (!this.enabled) return
-    const locator = Locator.fromElement(e.srcElement, this.frame)
     const event = dataBuilder(e) || {}
-    event['type'] = e.type
-    event['locator'] = locator
 
     this.emit('detect', event)
   }
