@@ -15,11 +15,13 @@ export default class Detector extends event.EventEmitter2 {
 
   _frame: Frame
   _enabled: boolean
+  _eventHandlers: Map<Element, { [eventType: string]: boolean }>
 
   constructor (frame: Frame) {
     super()
     this._frame = frame
     this._enabled = false
+    this._eventHandlers = new Map()
   }
 
   get frame () {
@@ -62,13 +64,30 @@ export default class Detector extends event.EventEmitter2 {
     this._enabled = false
   }
 
+  protected markEvent (element: Element, eventType: string) {
+    var eventMarks = this._eventHandlers.get(element)
+
+    if (!eventMarks) {
+      eventMarks = {}
+      this._eventHandlers.set(element, eventMarks)
+    }
+
+    eventMarks[eventType] = true
+  }
+
+  protected isMarked (element: Element, eventType: string) {
+    const eventMarks = this._eventHandlers.get(element)
+
+    return eventMarks && eventMarks[eventType]
+  }
+
   protected isClickable (target: Element) {
     if (target instanceof HTMLInputElement) {
       return ['submit', 'reset', 'button', 'image'].indexOf(target.type) !== -1
-    } else if (target instanceof HTMLAnchorElement && target.classList.contains('href')) {
+    } else if (target instanceof HTMLAnchorElement && target.attributes.getNamedItem('href')) {
       return true
     } else {
-      return false
+      return ['button', 'link', 'option', 'checkbox', 'treeitem'].indexOf(target.getAttribute('role')) !== -1
     }
   }
 
@@ -77,6 +96,8 @@ export default class Detector extends event.EventEmitter2 {
   }
 
   protected bindTree(root: Element) {
+    this.bindEvents(root)
+
     for (var i = 0; i < root.children.length; i++) {
       const ele = root.children.item(i)
       this.bindEvents(ele)
@@ -90,25 +111,27 @@ export default class Detector extends event.EventEmitter2 {
   }
 
   protected bindClickEvent (target: Element) {
-    target.addEventListener('click',
-      this.handleEvent.bind(this, (e: MouseEvent) => {
-        return VirtualEvent.fromDOMEvent(e, this.frame, { eventProps: ['x', 'y'] })
-      })
-    )
+    if (this.isMarked(target, 'click')) return
+
+    target.addEventListener('click', (e) => {
+      this.handleEvent(VirtualEvent.fromDOMEvent(e, this.frame, { eventProps: ['x', 'y'] }))
+    })
+
+    this.markEvent(target, 'click')
   }
 
   protected bindChangeEvent (target: Element) {
-    target.addEventListener('change',
-      this.handleEvent.bind(this, (e: Event) => {
-        return VirtualEvent.fromDOMEvent(e, this.frame, { elementProps: ['value'] })
-      })
-    )
+    if (this.isMarked(target, 'change')) return
+
+    target.addEventListener('change', (e) => {
+      this.handleEvent(VirtualEvent.fromDOMEvent(e, this.frame, { elementProps: ['value'] }))
+    })
+
+    this.markEvent(target, 'change')
   }
 
-  protected handleEvent (dataBuilder: (e: Event) => {}, e: Event) {
+  protected handleEvent (ve: VirtualEvent) {
     if (!this.enabled) return
-    const event = dataBuilder(e) || {}
-
-    this.emit('detect', event)
+    this.emit('detect', ve)
   }
 }

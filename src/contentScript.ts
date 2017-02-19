@@ -4,15 +4,17 @@ import * as Rx from 'rxjs/Rx'
 
 const frame = new Frame(window)
 const detector = new Detector(frame)
-
-chrome.runtime.onMessage.addListener((res, sender, sendResponse) => {
-  switch (res.type) {
-    case 'pageLoaded':
-      detector.bind()
-      detector.enable()
-      break
-  }
-})
+detector.bind()
+detector.enable()
+//
+// chrome.runtime.onMessage.addListener((res, sender, sendResponse) => {
+//   switch (res.type) {
+//     case 'pageLoaded':
+//       detector.bind()
+//       detector.enable()
+//       break
+//   }
+// })
 
 detector.on('detect', function (event) {
   console.log(event)

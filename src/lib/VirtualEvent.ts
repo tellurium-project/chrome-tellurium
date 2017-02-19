@@ -17,7 +17,7 @@ export default class VirtualEvent {
 
     virtualEvent.type = e.type
     virtualEvent.path = this.getVirtualPath(e['path'])
-    virtualEvent.target = VirtualElement.fromDOMElement(<Element>e.target, elementProps)
+    virtualEvent.target = VirtualElement.fromDOMElement(<Element>e.currentTarget, elementProps)
     virtualEvent.locator = Locator.fromElement(<Element>e.target, frame)
 
     for (var attr of eventProps) {
