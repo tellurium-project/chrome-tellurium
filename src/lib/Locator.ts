@@ -1,66 +1,63 @@
-import LocatorBuilder from './locator_builders/LocatorBuilder'
-import IDLocatorBuilder from './locator_builders/IDLocatorBuilder'
-import NameLocatorBuilder from './locator_builders/NameLocatorBuilder'
-import LinkTextLocatorBuilder from './locator_builders/LinkTextLocatorBuilder'
-import CSSLocatorBuilder from './locator_builders/CSSLocatorBuilder'
-import Frame from './Frame'
+type LocatorConstructor = new(element: Element) => Locator
 
-type LocatorMatcher =
-  (element: Element, frame: Frame, locator: string, locatorType: string, bestMethod?: boolean) => boolean
-
-export default class Locator {
-  private _originalElement: Element
-  private _frame: Frame
-  nodeName: string
-  type: string
-  candidates: {}
+abstract class Locator {
+  element: Element
   value: string
+  isAvailable: boolean
+  isUnique: boolean
 
-  constructor (originalElement: Element, type: string, candidates: {}) {
-    this._originalElement = originalElement
-    this.type = type
-    this.candidates = candidates
-    this.value = this.candidates[this.type][0] || ''
-    this.nodeName = originalElement.nodeName.toLowerCase()
+  constructor (element: Element) {
+    this.element = element
+    this.build()
   }
 
-  get originalElement () {
-    return this._originalElement
+  abstract buildLocator (): string
+  abstract findElements (locator: string): Node[] | NodeList
+
+  build (): void {
+    const locator = this.buildLocator()
+    if (locator === undefined || locator === null) return
+
+    const elements = this.findElements(locator)
+
+    if (elements.length > 0 && elements[0] == this.element) {
+      this.isAvailable = true
+      this.value = locator
+
+      if (elements.length === 1) this.isUnique = true
+    }
   }
 
-  equals (other: Locator) {
-    return this.originalElement === other.originalElement
+  get document (): Document {
+    return this.element.ownerDocument
   }
 
-  static readonly defaultBuilders: LocatorBuilder[] = [
-    new IDLocatorBuilder(),
-    new NameLocatorBuilder(),
-    new LinkTextLocatorBuilder(),
-    new CSSLocatorBuilder()
-  ]
+  static locators: { [name: string]: LocatorConstructor }
 
-  static fromElement (element: Element, frame: Frame, builders = this.defaultBuilders): Locator {
-    const locatorMatcher: LocatorMatcher = (element: Element, frame: Frame, locator: string, locatorType: string): boolean => {
-      if (locator && frame.locateElement(locatorType, locator) === element) return true
-      return false
+  static initialize () {
+    this.locators = {}
+  }
+
+  static register (name: string, ctor: LocatorConstructor): void {
+    this.locators[name] = ctor
+  }
+
+  static fromElement (element: Element): { [name: string]: Locator } {
+    const availableLocators = {}
+
+    for (var name in this.locators) {
+      const ctor = this.get(name)
+      const locator = new ctor(element)
+      if (locator.isAvailable) availableLocators[name] = locator
     }
 
-    const values = {}
-    var bestMethod = null
+    return availableLocators
+  }
 
-    for (const builder of builders) {
-      const locator = builder.build(element, frame)
-      const locatorType = builder.toLocatorType()
-      values[locatorType] = values[locatorType] || []
-
-      if (locator) {
-        values[locatorType].push(locator)
-      }
-
-      const isMatch = locatorMatcher(element, frame, locator, locatorType)
-      if (isMatch && !bestMethod) bestMethod = locatorType
-    }
-
-    return new Locator(element, bestMethod, values)
+  static get (name: string): LocatorConstructor {
+    return this.locators[name]
   }
 }
+
+Locator.initialize()
+export default Locator

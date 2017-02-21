@@ -13,27 +13,19 @@ export default class Detector extends event.EventEmitter2 {
   ]
   static doubleClickInterval = 300
 
-  _frame: Frame
-  _enabled: boolean
-  _eventHandlers: Map<Element, { [eventType: string]: boolean }>
+  window: Window
+  enabled: boolean
+  eventHandlers: Map<Element, { [eventType: string]: boolean }>
 
-  constructor (frame: Frame) {
+  constructor (win: Window) {
     super()
-    this._frame = frame
-    this._enabled = false
-    this._eventHandlers = new Map()
-  }
-
-  get frame () {
-    return this._frame
+    this.window = win
+    this.enabled = false
+    this.eventHandlers = new Map()
   }
 
   get document () {
-    return this.frame.document
-  }
-
-  get enabled () {
-    return this._enabled
+    return this.window.document
   }
 
   bind () {
@@ -57,26 +49,26 @@ export default class Detector extends event.EventEmitter2 {
   }
 
   enable () {
-    this._enabled = true
+    this.enabled = true
   }
 
   disable () {
-    this._enabled = false
+    this.enabled = false
   }
 
   protected markEvent (element: Element, eventType: string) {
-    var eventMarks = this._eventHandlers.get(element)
+    var eventMarks = this.eventHandlers.get(element)
 
     if (!eventMarks) {
       eventMarks = {}
-      this._eventHandlers.set(element, eventMarks)
+      this.eventHandlers.set(element, eventMarks)
     }
 
     eventMarks[eventType] = true
   }
 
   protected isMarked (element: Element, eventType: string) {
-    const eventMarks = this._eventHandlers.get(element)
+    const eventMarks = this.eventHandlers.get(element)
 
     return eventMarks && eventMarks[eventType]
   }
@@ -114,7 +106,7 @@ export default class Detector extends event.EventEmitter2 {
     if (this.isMarked(target, 'click')) return
 
     target.addEventListener('click', (e) => {
-      this.handleEvent(VirtualEvent.fromDOMEvent(e, this.frame, { eventProps: ['x', 'y'] }))
+      this.handleEvent(VirtualEvent.fromDOMEvent(e, { eventProps: ['x', 'y'] }))
     })
 
     this.markEvent(target, 'click')
@@ -124,7 +116,7 @@ export default class Detector extends event.EventEmitter2 {
     if (this.isMarked(target, 'change')) return
 
     target.addEventListener('change', (e) => {
-      this.handleEvent(VirtualEvent.fromDOMEvent(e, this.frame, { elementProps: ['value'] }))
+      this.handleEvent(VirtualEvent.fromDOMEvent(e, { elementProps: ['value'] }))
     })
 
     this.markEvent(target, 'change')

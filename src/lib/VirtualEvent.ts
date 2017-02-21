@@ -6,19 +6,19 @@ export default class VirtualEvent {
   type: string
   target: VirtualElement
   path: VirtualElement[]
-  locator: Locator
+  locators: { [name: string]: Locator }
 
   constructor () {
     this.path = []
   }
 
-  static fromDOMEvent (e: Event, frame: Frame, { eventProps = [], elementProps = [] }: { eventProps?: string[], elementProps?: string[] }): VirtualEvent {
+  static fromDOMEvent (e: Event, { eventProps = [], elementProps = [] }: { eventProps?: string[], elementProps?: string[] }): VirtualEvent {
     const virtualEvent = new VirtualEvent()
 
     virtualEvent.type = e.type
     virtualEvent.path = this.getVirtualPath(e['path'])
     virtualEvent.target = VirtualElement.fromDOMElement(<Element>e.currentTarget, elementProps)
-    virtualEvent.locator = Locator.fromElement(<Element>e.target, frame)
+    virtualEvent.locators = Locator.fromElement(<Element>e.target)
 
     for (var attr of eventProps) {
       virtualEvent[attr] = e[attr]

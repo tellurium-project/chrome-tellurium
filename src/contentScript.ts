@@ -1,9 +1,8 @@
-import Frame from './lib/Frame'
 import Detector from './lib/Detector'
+import './locators'
 import * as Rx from 'rxjs/Rx'
 
-const frame = new Frame(window)
-const detector = new Detector(frame)
+const detector = new Detector(window)
 detector.bind()
 detector.enable()
 //

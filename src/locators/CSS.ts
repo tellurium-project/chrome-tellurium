@@ -1,18 +1,13 @@
-import LocatorBuilder from './LocatorBuilder'
-import Frame from '../Frame'
+import Locator from '../lib/Locator'
 
-export default class CSSLocatorBuilder implements LocatorBuilder {
-  readonly targetAttributes = ['id', 'name', 'class', 'type', 'alt', 'title', 'value']
-  readonly specialAttributeBuilders = {
-    id: this.buildIDAttr,
-    class: this.buildClassAttr
-  }
+export default class CSSLocator extends Locator {
+  static readonly targetAttributes = ['id', 'name', 'class', 'type', 'alt', 'title', 'value']
 
-  build (element: Element, frame: Frame): string {
-    var current = element
-    var selector = this.buildSimpleSelector(element)
+  buildLocator () {
+    var current = this.element
+    var selector = this.buildSimpleSelector(this.element)
 
-    while (frame.locateElementByCSS(selector) !== element && current.tagName.toLowerCase() !== 'html') {
+    while (this.document.querySelector(selector) !== this.element && current.tagName.toLowerCase() !== 'html') {
       selector = this.buildSimpleSelector(current.parentElement) + ' > ' + selector
       current = current.parentElement
     }
@@ -20,8 +15,8 @@ export default class CSSLocatorBuilder implements LocatorBuilder {
     return selector
   }
 
-  toLocatorType (): string {
-    return 'css'
+  findElements (locator: string) {
+    return this.document.querySelectorAll(locator)
   }
 
   private buildSimpleSelector (element: Element): string {
@@ -30,22 +25,20 @@ export default class CSSLocatorBuilder implements LocatorBuilder {
 
   private buildAttr (element: Element): string {
     const validAttrs =
-      this.targetAttributes.filter((attr) => {
+      CSSLocator.targetAttributes.filter((attr) => {
         return element.hasAttribute(attr)
       }).map((attr) => {
-        const buildFunc = this.specialAttributeBuilders[attr.toLowerCase()] || this.buildNormalAttr
-        return buildFunc(element, attr)
+        switch (attr.toLowerCase()) {
+          case 'id':
+            return `${element.id}`
+          case 'class':
+            return `.${Array.from(element.classList).join('.')}`
+          default:
+            return `${element.tagName.toLowerCase()}[${attr}="${element.getAttribute(attr)}"]`
+        }
       })
 
     return validAttrs[0]
-  }
-
-  private buildNormalAttr (element: Element, attr: string): string {
-    return `${element.tagName.toLowerCase()}[${attr}="${element.getAttribute(attr)}"]`
-  }
-
-  private buildIDAttr (element: Element): string {
-    return `#${element.id}`
   }
 
   private buildClassAttr (element: Element): string {
@@ -77,3 +70,5 @@ export default class CSSLocatorBuilder implements LocatorBuilder {
     return element.tagName.toLowerCase()
   }
 }
+
+Locator.register('css', CSSLocator)
