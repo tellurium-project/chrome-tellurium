@@ -1,4 +1,4 @@
-type LocatorConstructor = new(element: Element) => Locator
+type LocatorConstructor = new(element?: Element) => Locator
 
 abstract class Locator {
   element: Element
@@ -6,9 +6,9 @@ abstract class Locator {
   isAvailable: boolean
   isUnique: boolean
 
-  constructor (element: Element) {
+  constructor (element?: Element) {
     this.element = element
-    this.build()
+    this.isUnique = false
   }
 
   abstract buildLocator (): string
@@ -44,11 +44,40 @@ abstract class Locator {
 
   static fromElement (element: Element): { [name: string]: Locator } {
     const availableLocators = {}
+    const locatorUniqueness = {}
 
     for (var name in this.locators) {
       const ctor = this.get(name)
       const locator = new ctor(element)
+      locator.build()
+
       if (locator.isAvailable) availableLocators[name] = locator
+    }
+
+    for (var name in availableLocators) {
+      if (name === 'id') continue
+      const locator = availableLocators[name]
+
+      for (var type in this.locators) {
+        if (type === name) continue
+
+        const ctor = Locator.get(type)
+        const loc = new ctor(element)
+        var eles: Node[] | NodeList = []
+
+        try {
+          eles = loc.findElements(locator.value)
+        } catch (e) {
+          console.error(e)
+        }
+
+        if (Array.from(eles).some((el) => el !== element)) {
+          availableLocators[name].isUnique = false
+          console.log(name, type, eles)
+          break
+        }
+      }
+
     }
 
     return availableLocators

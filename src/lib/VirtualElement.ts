@@ -3,9 +3,26 @@ export default class VirtualElement {
   classList: string[]
   attributes: {}
 
-  constructor () {
-    this.attributes = {}
-    this.classList = []
+  constructor (obj = {}) {
+    for (var key in obj) {
+      this[key] = obj[key]
+    }
+
+    this.attributes = obj['attributes'] || {}
+    this.classList = obj['classList'] || []
+  }
+
+  equals (other: VirtualElement) {
+    var attrEqual = true
+
+    for (var attrName in this.attributes) {
+      if (this.attributes[attrName] !== other.attributes[attrName]) {
+        attrEqual = false
+        break
+      }
+    }
+
+    return this.tagName === other.tagName && attrEqual
   }
 
   static fromDOMElement (element: Element, elementProps: string[]): VirtualElement {

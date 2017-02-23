@@ -1,7 +1,6 @@
 import * as event from 'eventemitter2'
 import * as Rx from 'rxjs/Rx'
 import Locator from './Locator'
-import Frame from './Frame'
 import VirtualEvent from './VirtualEvent'
 
 export default class Detector extends event.EventEmitter2 {
@@ -84,7 +83,7 @@ export default class Detector extends event.EventEmitter2 {
   }
 
   protected isChangable (target: Element) {
-    return ['INPUT', 'TEXTAREA'].indexOf(target.tagName) !== -1
+    return ['input', 'textarea', 'select'].indexOf(target.tagName.toLowerCase()) !== -1
   }
 
   protected bindTree(root: Element) {
@@ -116,7 +115,14 @@ export default class Detector extends event.EventEmitter2 {
     if (this.isMarked(target, 'change')) return
 
     target.addEventListener('change', (e) => {
-      this.handleEvent(VirtualEvent.fromDOMEvent(e, { elementProps: ['value'] }))
+      var selectedOpts = []
+      if (e.target instanceof HTMLSelectElement) {
+        selectedOpts = Array.from(e.target.selectedOptions).map((opt) => opt.textContent)
+      }
+
+      const veve = VirtualEvent.fromDOMEvent(e, { elementProps: ['value', 'checked', 'files'] })
+      veve['selectedOptions'] = selectedOpts
+      this.handleEvent(veve)
     })
 
     this.markEvent(target, 'change')

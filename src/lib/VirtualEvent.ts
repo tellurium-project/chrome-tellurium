@@ -1,6 +1,5 @@
 import VirtualElement from './VirtualElement'
 import Locator from './Locator'
-import Frame from './Frame'
 
 export default class VirtualEvent {
   type: string
@@ -8,8 +7,15 @@ export default class VirtualEvent {
   path: VirtualElement[]
   locators: { [name: string]: Locator }
 
-  constructor () {
-    this.path = []
+  constructor (obj = {}) {
+    for (var key in obj) {
+      this[key] = obj[key]
+    }
+    
+    this.type = obj['type']
+    this.target = new VirtualElement(obj['target'])
+    this.path = obj['path'] || []
+    this.locators = obj['locators'] || {}
   }
 
   static fromDOMEvent (e: Event, { eventProps = [], elementProps = [] }: { eventProps?: string[], elementProps?: string[] }): VirtualEvent {
@@ -18,7 +24,7 @@ export default class VirtualEvent {
     virtualEvent.type = e.type
     virtualEvent.path = this.getVirtualPath(e['path'])
     virtualEvent.target = VirtualElement.fromDOMElement(<Element>e.currentTarget, elementProps)
-    virtualEvent.locators = Locator.fromElement(<Element>e.target)
+    virtualEvent.locators = Locator.fromElement(<Element>e.currentTarget)
 
     for (var attr of eventProps) {
       virtualEvent[attr] = e[attr]
