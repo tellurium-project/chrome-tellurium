@@ -8,7 +8,6 @@ export default class CSSLocator extends Locator {
     var selector = this.buildSimpleSelector(this.element)
 
     while (this.document.querySelector(selector) !== this.element && current.tagName.toLowerCase() !== 'html') {
-      // console.log(this.buildAttr(current.parentElement), this.buildNthOfType(current.parentElement), this.buildType(current.parentElement))
       selector = this.buildSimpleSelector(current.parentElement) + ' > ' + selector
       current = current.parentElement
     }

@@ -73,7 +73,6 @@ abstract class Locator {
 
         if (Array.from(eles).some((el) => el !== element)) {
           availableLocators[name].isUnique = false
-          console.log(name, type, eles)
           break
         }
       }
