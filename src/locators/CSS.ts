@@ -8,6 +8,7 @@ export default class CSSLocator extends Locator {
     var selector = this.buildSimpleSelector(this.element)
 
     while (this.document.querySelector(selector) !== this.element && current.tagName.toLowerCase() !== 'html') {
+      // console.log(this.buildAttr(current.parentElement), this.buildNthOfType(current.parentElement), this.buildType(current.parentElement))
       selector = this.buildSimpleSelector(current.parentElement) + ' > ' + selector
       current = current.parentElement
     }
@@ -30,7 +31,7 @@ export default class CSSLocator extends Locator {
       }).map((attr) => {
         switch (attr.toLowerCase()) {
           case 'id':
-            return `${element.id}`
+            return `${element.getAttribute('id')}`
           case 'class':
             return `.${Array.from(element.classList).join('.')}`
           default:
